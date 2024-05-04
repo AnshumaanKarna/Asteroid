@@ -4,26 +4,21 @@ import math
 import sys
 from pygame.locals import *
 
-# Initialize Pygame
 pygame.init()
 
-# Set up the screen
 screen_width = 800
 screen_height = 600
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Asteroids")
 
-# Colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 ORANGE = (255, 165, 0)
 
-# Fonts
 font_title = pygame.font.Font(None, 64)
 font_button = pygame.font.Font(None, 32)
 
-# Load images
 player_img = pygame.image.load('spaceship.png').convert_alpha()
 player_img = pygame.transform.scale(player_img, (80, 60))
 asteroid_img = pygame.image.load('asteroid.png').convert_alpha()
@@ -31,7 +26,6 @@ asteroid_img = pygame.transform.scale(asteroid_img, (50, 50))
 laser_img = pygame.image.load('laser.png').convert_alpha()
 laser_img = pygame.transform.scale(laser_img, (50, 30))
 
-# Player class
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -56,7 +50,6 @@ class Player(pygame.sprite.Sprite):
         all_sprites.add(bullet)
         bullets.add(bullet)
 
-# Bullet class
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, pos, angle):
         super().__init__()
@@ -68,7 +61,6 @@ class Bullet(pygame.sprite.Sprite):
     def update(self):
         self.rect.move_ip(self.vel)
 
-# Asteroid class
 class Asteroid(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -89,14 +81,12 @@ class Asteroid(pygame.sprite.Sprite):
             if math.hypot(x - screen_width // 2, y - screen_height // 2) > 150:
                 return x, y
 
-# Create sprites
 player = Player()
 all_sprites = pygame.sprite.Group()
 all_sprites.add(player)
 bullets = pygame.sprite.Group()
 asteroids = pygame.sprite.Group()
 
-# Welcome page function
 def welcome_page():
     welcome = True
 
@@ -129,21 +119,18 @@ def welcome_page():
                     pygame.quit()
                     sys.exit()
 
-# Game loop
 clock = pygame.time.Clock()
 score = 0
 game_over = False
 
-# Function to display loss message
 def display_loss_message():
     loss_text = font_title.render("YOU LOST", True, RED)
     loss_rect = loss_text.get_rect(center=(screen_width // 2, screen_height // 2))
     screen.blit(loss_text, loss_rect)
     pygame.display.flip()
-    pygame.time.delay(2000)  # Display message for 4 seconds
+    pygame.time.delay(2000)  
     ask_quit()
 
-# Function to display quit option
 def ask_quit():
     screen.fill(BLACK)
 
@@ -165,18 +152,15 @@ def ask_quit():
                     pygame.quit()
                     sys.exit()
 
-# Spawn asteroids
 def spawn_asteroid():
     asteroid = Asteroid()
     all_sprites.add(asteroid)
     asteroids.add(asteroid)
-    pygame.time.set_timer(USEREVENT + 1, random.randint(1000, 3000))  # Reschedule spawning
+    pygame.time.set_timer(USEREVENT + 1, random.randint(1000, 3000))  
 
-# Welcome page
 welcome_page()
-spawn_asteroid()  # Initial asteroid spawn
+spawn_asteroid() 
 
-# Game loop function
 def game_loop():
     global score, game_over
     while not game_over:
@@ -203,7 +187,6 @@ def game_loop():
 
         all_sprites.update()
 
-        # Check for collisions
         hits = pygame.sprite.groupcollide(asteroids, bullets, True, True)
         for hit in hits:
             score += 1
@@ -212,11 +195,10 @@ def game_loop():
         hits = pygame.sprite.spritecollide(player, asteroids, True)
         if hits:
             game_over = True
-            display_loss_message()  # Display loss message
+            display_loss_message()  
 
         all_sprites.draw(screen)
 
-        # Display score
         font = pygame.font.Font(None, 36)
         text = font.render("Score: " + str(score), True, WHITE)
         screen.blit(text, (10, 10))
@@ -224,8 +206,6 @@ def game_loop():
         pygame.display.flip()
         clock.tick(60)
 
-    # Show exit option
     ask_quit()
 
-# Start the game loop
 game_loop()
