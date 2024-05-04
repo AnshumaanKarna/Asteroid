@@ -61,9 +61,8 @@ class AsteroidsEnvironment:
         self.asteroids = []  # Reset asteroids
         self.bullets = []  # Reset bullets
         # Add initial asteroids
-        self.spawn_asteroid()
-        self.spawn_asteroid()
-        self.spawn_asteroid()
+        for _ in range(5):  # Randomly spawn 5 asteroids at the beginning
+            self.spawn_asteroid()
         # Return initial state
         return self.get_state()
 
@@ -138,9 +137,9 @@ class AsteroidsEnvironment:
         return min(self.asteroids, key=lambda x: np.sqrt((self.player_x - x[0]) ** 2 + (self.player_y - x[1]) ** 2))
 
     def spawn_asteroid(self):
-        # Spawn a new asteroid at a random position near the player
-        x = random.randint(max(0, self.player_x - 100), min(self.screen_width, self.player_x + 100))
-        y = random.randint(max(0, self.player_y - 100), min(self.screen_height, self.player_y + 100))
+        # Spawn a new asteroid at a random position within the game screen
+        x = random.randint(0, self.screen_width)
+        y = random.randint(0, self.screen_height)
         self.asteroids.append([x, y])
 
     def get_state_index(self, state=None):
@@ -188,3 +187,4 @@ for episode in range(num_episodes):
                 pygame.quit()
                 sys.exit()
         env.clock.tick(60)  # Cap the frame rate to 60 FPS
+
