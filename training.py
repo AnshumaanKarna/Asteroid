@@ -118,8 +118,9 @@ class AsteroidsEnvironment:
         return min(self.asteroids, key=lambda x: np.sqrt((self.player_x - x[0]) ** 2 + (self.player_y - x[1]) ** 2))
 
     def spawn_asteroid(self):
-        x = random.randint(0, self.screen_width)
-        y = random.randint(0, self.screen_height)
+        min_distance_from_edge = 50
+        x = random.randint(min_distance_from_edge, self.screen_width - min_distance_from_edge)
+        y = random.randint(min_distance_from_edge, self.screen_height - min_distance_from_edge)
         self.asteroids.append([x, y])
 
     def get_state_index(self, state=None):
