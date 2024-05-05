@@ -171,5 +171,3 @@ for episode in range(num_episodes):
                 pygame.quit()
                 sys.exit()
         env.clock.tick(60) 
-
-
