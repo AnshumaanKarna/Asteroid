@@ -2,6 +2,7 @@ import numpy as np
 import pygame
 import sys
 import random
+import time
 
 class QLearningAgent:
     def __init__(self, num_actions, num_states, learning_rate=0.1, discount_factor=0.99, epsilon=0.1):
@@ -49,6 +50,8 @@ class AsteroidsEnvironment:
         self.clock = pygame.time.Clock()
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
         pygame.display.set_caption('Asteroids Game')
+
+        self.last_spawn_time = time.time()
 
     def reset(self):
         self.player_x = self.screen_width // 2
@@ -147,6 +150,11 @@ class AsteroidsEnvironment:
             pygame.draw.rect(self.screen, (255, 255, 255), bullet_rect)
         pygame.display.flip()
 
+    def spawn_asteroid_timer(self):
+        if time.time() - self.last_spawn_time >= 2:
+            self.spawn_asteroid()
+            self.last_spawn_time = time.time()
+
 env = AsteroidsEnvironment()
 
 num_episodes = 1000
@@ -156,10 +164,12 @@ for episode in range(num_episodes):
     while not done:
         action = env.agent.select_action(env.get_state_index())
         next_state, reward, done = env.step(action)
-        env.render()  
+        env.render()
+        env.spawn_asteroid_timer()  # Call the asteroid spawning timer function
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
         env.clock.tick(60) 
+
 
